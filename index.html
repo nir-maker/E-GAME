@@ -2,140 +2,63 @@
 <html lang="he">
 <head>
   <meta charset="UTF-8">
+  <title>משחק תרגום חכם</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>משחק תרגום - למידה חכמה</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background: linear-gradient(135deg, #89f7fe, #66a6ff);
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      color: #333;
+      margin: 0; padding: 0;
+      display: flex; flex-direction: column; align-items: center;
+      min-height: 100vh; color: #333;
     }
-    header {
-      background-color: rgba(255, 255, 255, 0.8);
-      width: 100%;
-      padding: 20px;
-      text-align: center;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
-    }
-    h1 {
-      margin: 0;
-      font-size: 2.5rem;
-      color: #333;
-    }
-    .container {
-      width: 90%;
-      max-width: 800px;
-      background-color: rgba(255, 255, 255, 0.95);
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-      margin-bottom: 20px;
-    }
-    .section-title {
-      font-size: 1.8rem;
-      margin-bottom: 10px;
-      text-align: center;
-    }
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 15px;
-    }
-    .form-group label {
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-    .form-group textarea {
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 1rem;
-      resize: vertical;
-      min-height: 80px;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 1rem;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s, transform 0.2s;
-      margin: 10px;
-    }
-    button:hover {
-      opacity: 0.9;
-    }
-    .btn-bulk {
-      background-color: #28a745;
-      color: white;
-    }
-    .btn-start {
-      background-color: #007bff;
-      color: white;
-    }
-    .btn-reset {
-      background-color: #dc3545;
-      color: white;
-    }
-    .btn-option {
-      background-color: #ffc107;
-      color: #333;
-      width: 200px;
-    }
-    .btn-option:hover {
-      transform: scale(1.05);
-    }
-    .options-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 20px;
-    }
-    .message {
-      font-size: 1.2rem;
-      margin-top: 15px;
-      text-align: center;
-    }
+    header { background-color: rgba(255,255,255,0.8); width: 100%; padding: 20px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    h1 { margin: 0; font-size: 2.2rem; color: #333; }
+    .container { width: 90%; max-width: 800px; background-color: rgba(255,255,255,0.97); padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.17); margin-bottom: 20px; }
+    .section-title { font-size: 1.3rem; margin-bottom: 10px; text-align: center; }
+    .form-group { display: flex; flex-direction: column; margin-bottom: 14px; }
+    .form-group label { font-weight: bold; margin-bottom: 5px; }
+    .form-group textarea { padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; margin-bottom: 5px; }
+    button { padding: 8px 18px; font-size: 1rem; border: none; border-radius: 4px; cursor: pointer; transition: background-color 0.3s, transform 0.2s; margin: 7px 5px; }
+    button:hover { opacity: 0.93; }
+    .btn-bulk { background-color: #28a745; color: white; }
+    .btn-start { background-color: #007bff; color: white; }
+    .btn-reset { background-color: #dc3545; color: white; }
+    .btn-option { background-color: #ffc107; color: #333; width: 200px; margin: 5px; }
+    .btn-option:hover { transform: scale(1.05); }
+    .options-container { display: flex; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
+    .message { font-size: 1.15rem; margin-top: 14px; text-align: center; }
   </style>
 </head>
 <body>
   <header>
-    <h1>משחק תרגום - למידה חכמה</h1>
+    <h1>משחק תרגום חכם</h1>
   </header>
-  
   <div class="container" id="word-input-section">
-    <h2 class="section-title">הוספת מילים בכמות</h2>
+    <h2 class="section-title">הדבק כאן רשימת מילים</h2>
     <div class="form-group">
-      <label for="bulkWords">
-        הזינו זוגות מילים (פורמט: כל שורה מכילה זוג מילים, כשהמילה באנגלית מופרדת מהתרגום באמצעות "-" או ":"):
+      <label for="manualPaste">
+        הדבק כאן רשימת מילים (אנגלית - עברית, כל שורה זוג):<br>
+        <span style="font-weight:normal;font-size:1rem;color:#666">
+          לדוגמה:<br>
+          note - פתק<br>
+          waiter - מלצר<br>
+          cup - ספל, כוס
+        </span>
       </label>
-      <textarea id="bulkWords" placeholder="לדוגמה:&#10;apple - תפוח&#10;banana - בננה"></textarea>
+      <textarea id="manualPaste" rows="8" placeholder="note - פתק&#10;waiter - מלצר"></textarea>
+      <button class="btn-bulk" id="addManualBtn">הוסף מילים</button>
     </div>
-    <button class="btn-bulk" id="addBulkBtn">הוסף מילים בכמות</button>
     <button class="btn-reset" id="resetGameBtn">איפוס המשחק</button>
   </div>
-  <!-- אחרי הטקסטאראה -->
-<div id="wordsTable" style="margin: 10px 0;"></div>
 
-<!-- כפתור בחירת כיוון שאלה -->
-<button id="switchDirectionBtn" class="btn-start" style="background:#555; color:white;">החלף כיוון שאלה</button>
-<!-- הצגת סטטיסטיקה -->
-<div id="stats" class="message"></div>
-
-  
+  <button id="switchDirectionBtn" class="btn-start" style="background:#555; color:white;">החלף כיוון שאלה</button>
+  <div id="stats" class="message"></div>
   <div class="container" id="game-section">
     <h2 class="section-title">משחק תרגום</h2>
     <button class="btn-start" id="startGameBtn">התחל משחק</button>
-    
     <div id="gameArea" style="display:none;">
-      <div id="question" style="font-size:1.5rem; text-align:center; margin-top:20px;"></div>
+      <div id="question" style="font-size:1.35rem; text-align:center; margin-top:18px;"></div>
       <button class="btn-start" id="playWordBtn" style="margin-top:10px;">השמע מילה</button>
       <div class="options-container" id="optionsContainer"></div>
       <div class="message" id="feedback"></div>
@@ -143,6 +66,193 @@
     </div>
   </div>
 
-  <script src="game.js"></script>
+  <script>
+let words = [];
+let currentQuestion = null;
+let correctCount = 0;
+let wrongCount = 0;
+let questionDirection = "en2he"; // 'en2he' או 'he2en'
+
+window.addEventListener('load', () => {
+  loadWordsFromStorage();
+  updateGameUI();
+});
+document.getElementById('addManualBtn').addEventListener('click', function() {
+  const text = document.getElementById('manualPaste').value.trim();
+  if (!text) { showMessage("לא נמצא טקסט להוספה.", true); return; }
+  let countAdded = 0, countDuplicates = 0;
+  text.split(/\n/).forEach(line => {
+    let parts = line.split(/[-:]/);
+    if (parts.length >= 2) {
+      let part1 = parts[0].trim();
+      let part2 = parts[1].trim();
+      let english, hebrew;
+      if (isEnglish(part1) && isHebrew(part2)) {
+        english = part1; hebrew = part2;
+      } else if (isHebrew(part1) && isEnglish(part2)) {
+        english = part2; hebrew = part1;
+      } else {
+        english = part1; hebrew = part2;
+      }
+      if (english && hebrew) {
+        if (!isDuplicate(english, hebrew)) {
+          words.push({ english, hebrew }); countAdded++;
+        } else { countDuplicates++; }
+      }
+    }
+  });
+  saveWordsToStorage();
+  if (countAdded > 0) showMessage(`נוספו ${countAdded} זוגות מילים!`, false);
+  if (countDuplicates > 0) showMessage(`${countDuplicates} זוגות היו כפולים ולא נוספו.`, true, 3000);
+  if (countAdded === 0 && countDuplicates === 0) showMessage("לא נמצאו מילים בפורמט תקין.", true);
+  document.getElementById('manualPaste').value = '';
+  updateGameUI();
+});
+document.getElementById('resetGameBtn').addEventListener('click', resetGame);
+document.getElementById('switchDirectionBtn').addEventListener('click', switchDirection);
+document.getElementById('startGameBtn').addEventListener('click', startGame);
+document.getElementById('nextQuestionBtn').addEventListener('click', nextQuestion);
+document.getElementById('playWordBtn').addEventListener('click', () => {
+  if (currentQuestion) speakWord(getCurrentQuestionText());
+});
+
+function saveWordsToStorage() {
+  localStorage.setItem('words', JSON.stringify(words));
+}
+function loadWordsFromStorage() {
+  try { words = JSON.parse(localStorage.getItem('words')) || []; }
+  catch (e) { showMessage("שגיאה בקריאת המילים", true); words = []; }
+}
+function updateGameUI() {
+  document.getElementById('manualPaste').value = '';
+  document.getElementById('gameArea').style.display = 'none';
+  document.getElementById('startGameBtn').style.display = 'inline-block';
+  document.getElementById('feedback').textContent = '';
+  updateStats();
+}
+function resetGame() {
+  if (confirm("האם אתה בטוח שברצונך לאפס את המשחק ולמחוק את כל המילים?")) {
+    words = []; correctCount = 0; wrongCount = 0;
+    localStorage.removeItem('words');
+    updateGameUI();
+    showMessage("המשחק אופס וכל המילים נמחקו.", false);
+  }
+}
+function isEnglish(text) { return /[A-Za-z]/.test(text); }
+function isHebrew(text) { return /[\u0590-\u05FF]/.test(text); }
+function isDuplicate(english, hebrew) {
+  return words.some(w => w.english.trim().toLowerCase() === english.trim().toLowerCase() &&
+                         w.hebrew.trim() === hebrew.trim());
+}
+function switchDirection() {
+  questionDirection = (questionDirection === "en2he") ? "he2en" : "en2he";
+  showMessage("כיוון השאלה שונה!", false, 1000);
+  if (document.getElementById('gameArea').style.display !== 'none') nextQuestion();
+}
+function startGame() {
+  if (words.length < 2) { showMessage("אנא הדבק לפחות 2 מילים.", true); return; }
+  document.getElementById('gameArea').style.display = 'block';
+  document.getElementById('startGameBtn').style.display = 'none';
+  correctCount = 0; wrongCount = 0; updateStats();
+  nextQuestion();
+}
+function nextQuestion() {
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('nextQuestionBtn').style.display = 'none';
+  generateQuestion();
+}
+function getCurrentQuestionText() {
+  return questionDirection === "en2he" ? currentQuestion.english : currentQuestion.hebrew;
+}
+function getCurrentAnswerText() {
+  return questionDirection === "en2he" ? currentQuestion.hebrew : currentQuestion.english;
+}
+function generateQuestion() {
+  if (words.length < 2) return;
+  const randomIndex = Math.floor(Math.random() * words.length);
+  currentQuestion = words[randomIndex];
+  const qText = getCurrentQuestionText();
+  document.getElementById('question').textContent =
+    questionDirection === "en2he"
+    ? `מהו התרגום של "${qText}"?`
+    : `מהי המילה באנגלית עבור "${qText}"?`;
+  let correctAns = getCurrentAnswerText();
+  let allAnswers = words.map(w => (questionDirection === "en2he" ? w.hebrew : w.english));
+  let options = [correctAns];
+  let others = allAnswers.filter(ans => ans !== correctAns);
+  shuffleArray(others);
+  while (options.length < 4 && others.length) options.push(others.shift());
+  shuffleArray(options);
+  displayOptions(options);
+  setTimeout(() => speakWord(qText), 500);
+}
+function displayOptions(options) {
+  const container = document.getElementById('optionsContainer');
+  container.innerHTML = '';
+  options.forEach(option => {
+    const btn = document.createElement('button');
+    btn.textContent = option;
+    btn.className = 'btn-option';
+    btn.disabled = false;
+    btn.onclick = function() { checkAnswer(option); };
+    container.appendChild(btn);
+  });
+}
+function checkAnswer(selectedOption) {
+  const feedbackDiv = document.getElementById('feedback');
+  const correctAns = getCurrentAnswerText();
+  if (selectedOption === correctAns) {
+    feedbackDiv.textContent = 'תשובה נכונה!';
+    feedbackDiv.style.color = 'green';
+    correctCount++; updateStats();
+    setTimeout(nextQuestion, 1200);
+  } else {
+    feedbackDiv.textContent = 'תשובה שגויה! התשובה הנכונה: ' + correctAns;
+    feedbackDiv.style.color = 'red';
+    wrongCount++; updateStats();
+    document.getElementById('nextQuestionBtn').style.display = 'inline-block';
+  }
+  document.querySelectorAll('.btn-option').forEach(btn => btn.disabled = true);
+}
+function updateStats() {
+  const stats = document.getElementById('stats');
+  if (!stats) return;
+  stats.innerHTML = `נכונות: ${correctCount} | שגויות: ${wrongCount}`;
+}
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+function speakWord(text) {
+  if ('speechSynthesis' in window) {
+    let utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = isEnglish(text) ? 'en-US' : 'he-IL';
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
+  }
+}
+function showMessage(msg, isError = false, timeMs = 1700) {
+  let el = document.getElementById('flashMsg');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'flashMsg';
+    document.body.appendChild(el);
+    Object.assign(el.style, {
+      position: 'fixed', top: '30px', right: '30px', zIndex: 10000,
+      background: '#fff', border: '2px solid #333', borderRadius: '10px',
+      padding: '12px 24px', fontSize: '1.1rem', minWidth: '180px',
+      boxShadow: '0 2px 12px rgba(0,0,0,0.13)', textAlign: 'center',
+      color: '#111'
+    });
+  }
+  el.style.background = isError ? '#ffd6d6' : '#e4ffd6';
+  el.style.borderColor = isError ? '#dc3545' : '#28a745';
+  el.textContent = msg;
+  el.style.display = 'block';
+  setTimeout(() => { el.style.display = 'none'; }, timeMs);
+}
+  </script>
 </body>
 </html>
