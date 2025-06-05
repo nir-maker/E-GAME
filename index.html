@@ -120,7 +120,9 @@ function saveWordsToStorage() {
   localStorage.setItem('words', JSON.stringify(words));
 }
 function loadWordsFromStorage() {
-  try { words = JSON.parse(localStorage.getItem('words')) || []; }
+  const stored = localStorage.getItem('words');
+  if (!stored) { words = []; return; }
+  try { words = JSON.parse(stored) || []; }
   catch (e) { showMessage("שגיאה בקריאת המילים", true); words = []; }
 }
 function updateGameUI() {
