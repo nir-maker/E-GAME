@@ -48,6 +48,7 @@
       </label>
       <textarea id="manualPaste" rows="8" placeholder="note - פתק&#10;waiter - מלצר"></textarea>
       <button class="btn-bulk" id="addManualBtn">הוסף מילים</button>
+      <button class="btn-bulk" id="loadGrade5Btn">טען מילים לכיתה ה'</button>
     </div>
     <button class="btn-reset" id="resetGameBtn">איפוס המשחק</button>
   </div>
@@ -68,6 +69,27 @@
 
   <script>
 let words = [];
+const grade5Words = [
+  { english: 'cat', hebrew: 'חתול' },
+  { english: 'dog', hebrew: 'כלב' },
+  { english: 'house', hebrew: 'בית' },
+  { english: 'school', hebrew: 'בית ספר' },
+  { english: 'tree', hebrew: 'עץ' },
+  { english: 'book', hebrew: 'ספר' },
+  { english: 'chair', hebrew: 'כיסא' },
+  { english: 'table', hebrew: 'שולחן' },
+  { english: 'friend', hebrew: 'חבר' },
+  { english: 'family', hebrew: 'משפחה' },
+  { english: 'ball', hebrew: 'כדור' },
+  { english: 'game', hebrew: 'משחק' },
+  { english: 'ride', hebrew: 'לרכב' },
+  { english: 'train', hebrew: 'רכבת' },
+  { english: 'bridge', hebrew: 'גשר' },
+  { english: 'water', hebrew: 'מים' },
+  { english: 'food', hebrew: 'אוכל' },
+  { english: 'sun', hebrew: 'שמש' },
+  { english: 'moon', hebrew: 'ירח' }
+];
 let currentQuestion = null;
 let correctCount = 0;
 let wrongCount = 0;
@@ -106,6 +128,18 @@ document.getElementById('addManualBtn').addEventListener('click', function() {
   if (countDuplicates > 0) showMessage(`${countDuplicates} זוגות היו כפולים ולא נוספו.`, true, 3000);
   if (countAdded === 0 && countDuplicates === 0) showMessage("לא נמצאו מילים בפורמט תקין.", true);
   document.getElementById('manualPaste').value = '';
+  updateGameUI();
+});
+document.getElementById('loadGrade5Btn').addEventListener('click', function() {
+  let added = 0;
+  grade5Words.forEach(pair => {
+    if (!isDuplicate(pair.english, pair.hebrew)) {
+      words.push(pair);
+      added++;
+    }
+  });
+  saveWordsToStorage();
+  showMessage(`${added} מילים נטענו!`, false);
   updateGameUI();
 });
 document.getElementById('resetGameBtn').addEventListener('click', resetGame);
