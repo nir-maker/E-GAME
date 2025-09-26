@@ -2,257 +2,714 @@
 <html lang="he">
 <head>
   <meta charset="UTF-8">
-  <title>משחק תרגום חכם</title>
+  <title>מילות שייכות וקישור באנגלית</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #89f7fe, #66a6ff);
-      margin: 0; padding: 0;
-      display: flex; flex-direction: column; align-items: center;
-      min-height: 100vh; color: #333;
+    :root {
+      --bg-gradient: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      --accent: #ffaf40;
+      --accent-2: #2ed573;
+      --text: #f4f9ff;
+      --card-bg: rgba(255, 255, 255, 0.13);
+      --card-border: rgba(255, 255, 255, 0.18);
+      --shadow: 0 20px 40px rgba(15, 32, 39, 0.3);
     }
-    header { background-color: rgba(255,255,255,0.8); width: 100%; padding: 20px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
-    h1 { margin: 0; font-size: 2.2rem; color: #333; }
-    .container { width: 90%; max-width: 800px; background-color: rgba(255,255,255,0.97); padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.17); margin-bottom: 20px; }
-    .section-title { font-size: 1.3rem; margin-bottom: 10px; text-align: center; }
-    .form-group { display: flex; flex-direction: column; margin-bottom: 14px; }
-    .form-group label { font-weight: bold; margin-bottom: 5px; }
-    .form-group textarea { padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; margin-bottom: 5px; }
-    button { padding: 8px 18px; font-size: 1rem; border: none; border-radius: 4px; cursor: pointer; transition: background-color 0.3s, transform 0.2s; margin: 7px 5px; }
-    button:hover { opacity: 0.93; }
-    .btn-bulk { background-color: #28a745; color: white; }
-    .btn-start { background-color: #007bff; color: white; }
-    .btn-reset { background-color: #dc3545; color: white; }
-    .btn-option { background-color: #ffc107; color: #333; width: 200px; margin: 5px; }
-    .btn-option:hover { transform: scale(1.05); }
-    .options-container { display: flex; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
-    .message { font-size: 1.15rem; margin-top: 14px; text-align: center; }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Rubik', 'Assistant', Arial, sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    header {
+      width: 100%;
+      padding: clamp(20px, 6vw, 60px);
+      text-align: center;
+      background: rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    header h1 {
+      margin: 0;
+      font-size: clamp(1.7rem, 4vw, 3rem);
+      letter-spacing: 0.04em;
+    }
+    header p {
+      margin: 10px auto 0;
+      max-width: 600px;
+      font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+      opacity: 0.85;
+    }
+    main {
+      width: min(1020px, 96vw);
+      margin: 30px auto 60px;
+      display: grid;
+      gap: 26px;
+    }
+    section {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 22px;
+      padding: clamp(18px, 4vw, 28px);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+    }
+    h2.section-title {
+      margin-top: 0;
+      margin-bottom: 12px;
+      font-size: clamp(1.2rem, 3.6vw, 1.8rem);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      font-size: 0.9rem;
+    }
+    .category-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .category-buttons button {
+      flex: 1 1 150px;
+      padding: 12px 18px;
+      border-radius: 14px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      color: #1e272e;
+      background: rgba(255, 175, 64, 0.82);
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .category-buttons button.active {
+      background: rgba(46, 213, 115, 0.9);
+      transform: translateY(-2px);
+    }
+    .category-buttons button:hover {
+      transform: translateY(-3px) scale(1.01);
+    }
+    .word-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+    .word-card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 18px;
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 180px;
+      position: relative;
+      overflow: hidden;
+    }
+    .word-card h3 {
+      margin: 0;
+      font-size: 1.35rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .word-card h3 button {
+      border: none;
+      background: rgba(46, 213, 115, 0.85);
+      color: #1e272e;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      transition: transform 0.2s ease;
+    }
+    .word-card h3 button:hover {
+      transform: scale(1.07);
+    }
+    .word-card p {
+      margin: 0;
+      font-size: 0.98rem;
+      line-height: 1.5;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.18);
+      font-size: 0.8rem;
+      color: #ffffff;
+      font-weight: 600;
+    }
+    .divider {
+      height: 1px;
+      background: rgba(255, 255, 255, 0.15);
+      margin: 10px 0;
+    }
+    .flashcard {
+      position: relative;
+      min-height: 240px;
+      display: grid;
+      place-items: center;
+      padding: 26px;
+      border-radius: 20px;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04));
+      text-align: center;
+    }
+    .flashcard-word {
+      font-size: clamp(1.4rem, 5vw, 2.3rem);
+      margin-bottom: 10px;
+    }
+    .flashcard-translation {
+      font-size: clamp(1.1rem, 4vw, 1.6rem);
+      color: rgba(255, 255, 255, 0.8);
+    }
+    .flashcard-example {
+      margin-top: 12px;
+      font-size: 1rem;
+      opacity: 0.85;
+    }
+    .flashcard-controls {
+      margin-top: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+    .btn {
+      padding: 12px 18px;
+      border-radius: 14px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #1e272e;
+      background: rgba(255, 255, 255, 0.85);
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+    .btn.accent {
+      background: rgba(46, 213, 115, 0.95);
+    }
+    .quiz-card {
+      display: grid;
+      gap: 14px;
+    }
+    .quiz-question {
+      font-size: 1.15rem;
+      font-weight: 500;
+    }
+    .quiz-options {
+      display: grid;
+      gap: 10px;
+    }
+    .quiz-options button {
+      text-align: right;
+      background: rgba(255, 255, 255, 0.12);
+      color: var(--text);
+    }
+    .quiz-options button.correct {
+      background: rgba(46, 213, 115, 0.9);
+      color: #1e272e;
+    }
+    .quiz-options button.wrong {
+      background: rgba(255, 99, 72, 0.9);
+      color: #fff;
+    }
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 0.95rem;
+      opacity: 0.85;
+    }
+    .progress-track {
+      width: 100%;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transition: width 0.4s ease;
+    }
+    .sentence-builder {
+      display: grid;
+      gap: 12px;
+    }
+    .sentence-builder select,
+    .sentence-builder input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 14px;
+      border: none;
+      font-size: 1rem;
+      background: rgba(255, 255, 255, 0.88);
+    }
+    .sentence-output {
+      min-height: 48px;
+      border-radius: 14px;
+      padding: 12px 16px;
+      background: rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+    }
+    footer {
+      width: 100%;
+      padding: 30px 12px 40px;
+      text-align: center;
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
+    @media (min-width: 920px) {
+      main {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      section.full-width {
+        grid-column: span 2;
+      }
+    }
   </style>
 </head>
 <body>
   <header>
-    <h1>משחק תרגום חכם</h1>
+    <h1>English Linkers & Possessives</h1>
+    <p>אפליקציה ורסטילית שתעזור לך לשלוט במילות השייכות והקישור החשובות באנגלית בעזרת הסברים, כרטיסיות, תרגול וסטטוס מתקדם.</p>
   </header>
-  <div class="container" id="word-input-section">
-    <h2 class="section-title">הדבק כאן רשימת מילים</h2>
-    <div class="form-group">
-      <label for="manualPaste">
-        הדבק כאן רשימת מילים (אנגלית - עברית, כל שורה זוג):<br>
-        <span style="font-weight:normal;font-size:1rem;color:#666">
-          לדוגמה:<br>
-          note - פתק<br>
-          waiter - מלצר<br>
-          cup - ספל, כוס
-        </span>
-      </label>
-      <textarea id="manualPaste" rows="8" placeholder="note - פתק&#10;waiter - מלצר"></textarea>
-      <button class="btn-bulk" id="addManualBtn">הוסף מילים</button>
-    </div>
-    <button class="btn-reset" id="resetGameBtn">איפוס המשחק</button>
-  </div>
+  <main>
+    <section class="full-width" id="overview">
+      <h2 class="section-title">מפת דרכים ללמידה <span class="pill">Start Smart</span></h2>
+      <div class="status-bar">
+        <span>רמת דיוק בחידון: <strong id="quizAccuracy">0%</strong></span>
+        <span>כרטיסיות שנלמדו: <strong id="flashcardsProgress">0 מתוך 12</strong></span>
+        <div class="progress-track">
+          <div id="progressFill" class="progress-fill"></div>
+        </div>
+      </div>
+      <p style="margin-top:14px; line-height:1.6; font-size:1rem; opacity:0.85;">התחילו בסקירת המילים, עברו לתרגול בכרטיסיות, נסו את החידון כדי לבחון את עצמכם ולבסוף בנו משפטים משלכם בעזרת מחולל המשפטים.</p>
+    </section>
 
-  <button id="switchDirectionBtn" class="btn-start" style="background:#555; color:white;">החלף כיוון שאלה</button>
-  <div id="stats" class="message"></div>
-  <div class="container" id="game-section">
-    <h2 class="section-title">משחק תרגום</h2>
-    <button class="btn-start" id="startGameBtn">התחל משחק</button>
-    <div id="gameArea" style="display:none;">
-      <div id="question" style="font-size:1.35rem; text-align:center; margin-top:18px;"></div>
-      <button class="btn-start" id="playWordBtn" style="margin-top:10px;">השמע מילה</button>
-      <div class="options-container" id="optionsContainer"></div>
-      <div class="message" id="feedback"></div>
-      <button class="btn-start" id="nextQuestionBtn" style="display:none;">שאלה הבאה</button>
-    </div>
-  </div>
+    <section id="wordExplorer">
+      <h2 class="section-title">חקר מילים <span class="pill">Discover</span></h2>
+      <div class="category-buttons">
+        <button class="active" data-category="possessive">מילות שייכות</button>
+        <button data-category="linking">מילות קישור</button>
+      </div>
+      <div id="wordGrid" class="word-grid"></div>
+    </section>
+
+    <section id="flashcards" class="full-width">
+      <h2 class="section-title">כרטיסיות אינטראקטיביות <span class="pill">Practice</span></h2>
+      <div class="flashcard" aria-live="polite">
+        <div id="flashcardWord" class="flashcard-word">בחרו כרטיס להתחלה</div>
+        <div id="flashcardTranslation" class="flashcard-translation"></div>
+        <div id="flashcardExample" class="flashcard-example"></div>
+      </div>
+      <div class="flashcard-controls">
+        <button class="btn" id="prevCard">הקודם</button>
+        <button class="btn accent" id="flipCard">הצג/הסתר פירוט</button>
+        <button class="btn" id="nextCard">הבא</button>
+        <button class="btn" id="speakCard">השמעה</button>
+        <button class="btn" id="markLearned">סיימתי ללמוד</button>
+      </div>
+    </section>
+
+    <section id="quiz">
+      <h2 class="section-title">חידון מהיר <span class="pill">Check Yourself</span></h2>
+      <div class="quiz-card">
+        <div id="quizQuestion" class="quiz-question">לחצו "שאלה חדשה" כדי להתחיל.</div>
+        <div id="quizOptions" class="quiz-options"></div>
+        <div class="flashcard-controls">
+          <button class="btn accent" id="newQuestion">שאלה חדשה</button>
+          <button class="btn" id="resetQuiz">איפוס נתונים</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="sentenceBuilder">
+      <h2 class="section-title">מחולל משפטים <span class="pill">Create</span></h2>
+      <div class="sentence-builder">
+        <label>
+          בחרו סוג משפט:
+          <select id="sentenceType">
+            <option value="possessive">שייכות - לדוגמה: זהו הספר שלי</option>
+            <option value="linking">קישור - לדוגמה: אני אוהב וגם מבשל</option>
+          </select>
+        </label>
+        <label>
+          בחרו נושא:
+          <select id="subjectSelect"></select>
+        </label>
+        <label>
+          בחרו תוספת:
+          <select id="detailSelect"></select>
+        </label>
+        <button class="btn accent" id="buildSentence">צרו משפט</button>
+        <div id="sentenceOutput" class="sentence-output">המשפט יופיע כאן.</div>
+      </div>
+    </section>
+  </main>
+  <footer>
+    פיתוח: אפליקציית לימוד אינטראקטיבית למילות שייכות וקישור באנגלית. שמרו את התקדמותכם בכל ביקור.
+  </footer>
 
   <script>
-let words = [];
-let currentQuestion = null;
-let correctCount = 0;
-let wrongCount = 0;
-let questionDirection = "en2he"; // 'en2he' או 'he2en'
+    const wordsData = [
+      { category: 'possessive', word: 'my', translation: 'שלי', explanation: 'משמש לפני שם עצם כדי לציין בעלות של הדובר.', example: 'This is my favorite song.' },
+      { category: 'possessive', word: 'your', translation: 'שלך/שלכם', explanation: 'מביע בעלות של בן השיח או של הקבוצה אליה פונים.', example: 'Is this your notebook?' },
+      { category: 'possessive', word: 'his', translation: 'שלו', explanation: 'מציין בעלות של גבר או של חפץ השייך לו.', example: 'His car is very fast.' },
+      { category: 'possessive', word: 'her', translation: 'שלה', explanation: 'מציין בעלות של אישה.', example: 'Her ideas are inspiring.' },
+      { category: 'possessive', word: 'our', translation: 'שלנו', explanation: 'מציין בעלות משותפת של הדובר ואחרים.', example: 'Our team won the match.' },
+      { category: 'possessive', word: 'their', translation: 'שלהם/שלהן', explanation: 'מציין בעלות של קבוצה אחרת.', example: 'Their house is near the beach.' },
+      { category: 'linking', word: 'and', translation: 'וגם', explanation: 'מוסיף מידע או פרט נוסף באותו משפט.', example: 'She plays the piano and sings beautifully.' },
+      { category: 'linking', word: 'but', translation: 'אבל', explanation: 'מציג ניגוד או הבדלים.', example: 'I wanted to go out, but it was raining.' },
+      { category: 'linking', word: 'because', translation: 'כי / בגלל', explanation: 'מציין סיבה או הסבר.', example: 'We stayed home because it was snowing.' },
+      { category: 'linking', word: 'so', translation: 'לכן', explanation: 'מציין תוצאה או מסקנה.', example: 'He was tired, so he went to bed early.' },
+      { category: 'linking', word: 'although', translation: 'למרות ש־', explanation: 'משמש כדי להציג סתירה.', example: 'Although it was cold, they went swimming.' },
+      { category: 'linking', word: 'therefore', translation: 'לפיכך', explanation: 'מילה רשמית המציגה מסקנה.', example: 'The road was closed; therefore, we took another route.' }
+    ];
 
-window.addEventListener('load', () => {
-  loadWordsFromStorage();
-  updateGameUI();
-});
-document.getElementById('addManualBtn').addEventListener('click', function() {
-  const text = document.getElementById('manualPaste').value.trim();
-  if (!text) { showMessage("לא נמצא טקסט להוספה.", true); return; }
-  let countAdded = 0, countDuplicates = 0;
-  text.split(/\n/).forEach(line => {
-    let parts = line.split(/[-:]/);
-    if (parts.length >= 2) {
-      let part1 = parts[0].trim();
-      let part2 = parts[1].trim();
-      let english, hebrew;
-      if (isEnglish(part1) && isHebrew(part2)) {
-        english = part1; hebrew = part2;
-      } else if (isHebrew(part1) && isEnglish(part2)) {
-        english = part2; hebrew = part1;
-      } else {
-        english = part1; hebrew = part2;
+    const quizTemplates = [
+      {
+        type: 'multipleChoice',
+        buildQuestion() {
+          const item = randomItem(wordsData);
+          const incorrect = shuffle(wordsData.filter(w => w.category === item.category && w.word !== item.word)).slice(0, 3);
+          const options = shuffle([item, ...incorrect]);
+          return {
+            text: `מה הפירוש של "${item.word}"?`,
+            options: options.map(opt => ({ text: `${opt.translation} – ${opt.explanation}`, correct: opt.word === item.word })),
+            speak: item.word
+          };
+        }
+      },
+      {
+        type: 'fillBlank',
+        buildQuestion() {
+          const item = randomItem(wordsData);
+          const sentence = createSentenceTemplate(item);
+          const options = shuffle([item.word, ...generateDistractors(item.word)]);
+          return {
+            text: sentence.replace('___', '_____'),
+            options: options.map(opt => ({ text: opt, correct: opt === item.word })),
+            speak: sentence.replace('___', item.word)
+          };
+        }
       }
-      if (english && hebrew) {
-        if (!isDuplicate(english, hebrew)) {
-          words.push({ english, hebrew }); countAdded++;
-        } else { countDuplicates++; }
+    ];
+
+    const subjects = {
+      possessive: [
+        { en: 'My brother', he: 'האח שלי' },
+        { en: 'Our teacher', he: 'המורה שלנו' },
+        { en: 'Their dog', he: 'הכלב שלהם' },
+        { en: 'Her sister', he: 'אחותה' }
+      ],
+      linking: [
+        { en: 'I enjoy learning', he: 'אני נהנה ללמוד' },
+        { en: 'She cooked dinner', he: 'היא בישלה ארוחת ערב' },
+        { en: 'We finished the project', he: 'סיימנו את הפרויקט' },
+        { en: 'They trained all week', he: 'הם התאמנו כל השבוע' }
+      ]
+    };
+
+    const details = {
+      possessive: [
+        { en: 'his new guitar', he: 'הגיטרה החדשה שלו' },
+        { en: 'our shared memories', he: 'הזיכרונות המשותפים שלנו' },
+        { en: 'their weekend plans', he: 'תוכניות סוף השבוע שלהם' },
+        { en: 'her creative projects', he: 'הפרויקטים היצירתיים שלה' }
+      ],
+      linking: [
+        { en: 'we celebrated together', he: 'חגגנו ביחד' },
+        { en: 'he needed some rest', he: 'הוא היה צריך מנוחה' },
+        { en: 'everyone applauded', he: 'כולם מחאו כפיים' },
+        { en: 'they asked for advice', he: 'הם ביקשו עצה' }
+      ]
+    };
+
+    let currentCategory = 'possessive';
+    let currentCardIndex = 0;
+    let showingDetails = false;
+    let learnedSet = new Set(JSON.parse(localStorage.getItem('learnedCards') || '[]'));
+    let quizStats = JSON.parse(localStorage.getItem('quizStats') || '{"correct":0,"total":0}');
+
+    const wordGrid = document.getElementById('wordGrid');
+    const categoryButtons = document.querySelectorAll('.category-buttons button');
+    const flashcardWord = document.getElementById('flashcardWord');
+    const flashcardTranslation = document.getElementById('flashcardTranslation');
+    const flashcardExample = document.getElementById('flashcardExample');
+    const progressFill = document.getElementById('progressFill');
+    const quizAccuracy = document.getElementById('quizAccuracy');
+    const flashcardsProgress = document.getElementById('flashcardsProgress');
+    const sentenceType = document.getElementById('sentenceType');
+    const subjectSelect = document.getElementById('subjectSelect');
+    const detailSelect = document.getElementById('detailSelect');
+    const sentenceOutput = document.getElementById('sentenceOutput');
+
+    function init() {
+      renderWordGrid();
+      loadFlashcard(currentCardIndex);
+      updateProgressBar();
+      updateQuizStats();
+      populateSentenceBuilder();
+      setupEventListeners();
+    }
+
+    function renderWordGrid() {
+      const filtered = wordsData.filter(w => w.category === currentCategory);
+      wordGrid.innerHTML = filtered.map(item => `
+        <article class="word-card">
+          <div>
+            <h3>${item.word}
+              <button aria-label="השמעה עבור ${item.word}" data-word="${item.word}">🔊</button>
+            </h3>
+            <span class="badge">${item.translation}</span>
+          </div>
+          <div class="divider"></div>
+          <p>${item.explanation}</p>
+          <p style="font-style:italic; opacity:0.85;">${item.example}</p>
+        </article>
+      `).join('');
+      wordGrid.querySelectorAll('button[data-word]').forEach(btn => {
+        btn.addEventListener('click', () => speakWord(btn.dataset.word));
+      });
+    }
+
+    function loadFlashcard(index) {
+      const item = wordsData[index];
+      if (!item) return;
+      flashcardWord.textContent = item.word;
+      flashcardTranslation.textContent = showingDetails ? `${item.translation} • ${item.explanation}` : item.translation;
+      flashcardExample.textContent = showingDetails ? item.example : '';
+      flashcardTranslation.style.opacity = showingDetails ? '1' : '0.85';
+      flashcardExample.style.opacity = showingDetails ? '0.85' : '0';
+    }
+
+    function changeCard(step) {
+      currentCardIndex = (currentCardIndex + step + wordsData.length) % wordsData.length;
+      showingDetails = false;
+      loadFlashcard(currentCardIndex);
+    }
+
+    function toggleDetails() {
+      showingDetails = !showingDetails;
+      loadFlashcard(currentCardIndex);
+    }
+
+    function markLearned() {
+      learnedSet.add(currentCardIndex);
+      localStorage.setItem('learnedCards', JSON.stringify(Array.from(learnedSet)));
+      updateProgressBar();
+    }
+
+    function updateProgressBar() {
+      const percent = Math.round((learnedSet.size / wordsData.length) * 100);
+      progressFill.style.width = percent + '%';
+      flashcardsProgress.textContent = `${learnedSet.size} מתוך ${wordsData.length}`;
+    }
+
+    function setupEventListeners() {
+      categoryButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          categoryButtons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentCategory = btn.dataset.category;
+          renderWordGrid();
+        });
+      });
+
+      document.getElementById('prevCard').addEventListener('click', () => changeCard(-1));
+      document.getElementById('nextCard').addEventListener('click', () => changeCard(1));
+      document.getElementById('flipCard').addEventListener('click', toggleDetails);
+      document.getElementById('speakCard').addEventListener('click', () => {
+        const item = wordsData[currentCardIndex];
+        speakWord(item.word);
+      });
+      document.getElementById('markLearned').addEventListener('click', markLearned);
+
+      document.getElementById('newQuestion').addEventListener('click', generateQuestion);
+      document.getElementById('resetQuiz').addEventListener('click', () => {
+        quizStats = { correct: 0, total: 0 };
+        localStorage.setItem('quizStats', JSON.stringify(quizStats));
+        updateQuizStats();
+        document.getElementById('quizQuestion').textContent = 'הנתונים אופסו. לחצו "שאלה חדשה" כדי להמשיך.';
+        document.getElementById('quizOptions').innerHTML = '';
+      });
+
+      document.getElementById('buildSentence').addEventListener('click', buildSentence);
+      sentenceType.addEventListener('change', populateSentenceBuilder);
+    }
+
+    function generateQuestion() {
+      const template = randomItem(quizTemplates);
+      const question = template.buildQuestion();
+      const questionContainer = document.getElementById('quizQuestion');
+      const optionsContainer = document.getElementById('quizOptions');
+
+      questionContainer.textContent = question.text;
+      optionsContainer.innerHTML = '';
+
+      question.options.forEach(option => {
+        const btn = document.createElement('button');
+        btn.className = 'btn';
+        btn.textContent = option.text;
+        btn.addEventListener('click', () => handleQuizAnswer(btn, option.correct, question.speak));
+        optionsContainer.appendChild(btn);
+      });
+
+      if (question.speak) {
+        speakWord(question.speak);
       }
     }
-  });
-  saveWordsToStorage();
-  if (countAdded > 0) showMessage(`נוספו ${countAdded} זוגות מילים!`, false);
-  if (countDuplicates > 0) showMessage(`${countDuplicates} זוגות היו כפולים ולא נוספו.`, true, 3000);
-  if (countAdded === 0 && countDuplicates === 0) showMessage("לא נמצאו מילים בפורמט תקין.", true);
-  document.getElementById('manualPaste').value = '';
-  updateGameUI();
-});
-document.getElementById('resetGameBtn').addEventListener('click', resetGame);
-document.getElementById('switchDirectionBtn').addEventListener('click', switchDirection);
-document.getElementById('startGameBtn').addEventListener('click', startGame);
-document.getElementById('nextQuestionBtn').addEventListener('click', nextQuestion);
-document.getElementById('playWordBtn').addEventListener('click', () => {
-  if (currentQuestion) speakWord(getCurrentQuestionText());
-});
 
-function saveWordsToStorage() {
-  localStorage.setItem('words', JSON.stringify(words));
-}
-function loadWordsFromStorage() {
-  try { words = JSON.parse(localStorage.getItem('words')) || []; }
-  catch (e) { showMessage("שגיאה בקריאת המילים", true); words = []; }
-}
-function updateGameUI() {
-  document.getElementById('manualPaste').value = '';
-  document.getElementById('gameArea').style.display = 'none';
-  document.getElementById('startGameBtn').style.display = 'inline-block';
-  document.getElementById('feedback').textContent = '';
-  updateStats();
-}
-function resetGame() {
-  if (confirm("האם אתה בטוח שברצונך לאפס את המשחק ולמחוק את כל המילים?")) {
-    words = []; correctCount = 0; wrongCount = 0;
-    localStorage.removeItem('words');
-    updateGameUI();
-    showMessage("המשחק אופס וכל המילים נמחקו.", false);
-  }
-}
-function isEnglish(text) { return /[A-Za-z]/.test(text); }
-function isHebrew(text) { return /[\u0590-\u05FF]/.test(text); }
-function isDuplicate(english, hebrew) {
-  return words.some(w => w.english.trim().toLowerCase() === english.trim().toLowerCase() &&
-                         w.hebrew.trim() === hebrew.trim());
-}
-function switchDirection() {
-  questionDirection = (questionDirection === "en2he") ? "he2en" : "en2he";
-  showMessage("כיוון השאלה שונה!", false, 1000);
-  if (document.getElementById('gameArea').style.display !== 'none') nextQuestion();
-}
-function startGame() {
-  if (words.length < 2) { showMessage("אנא הדבק לפחות 2 מילים.", true); return; }
-  document.getElementById('gameArea').style.display = 'block';
-  document.getElementById('startGameBtn').style.display = 'none';
-  correctCount = 0; wrongCount = 0; updateStats();
-  nextQuestion();
-}
-function nextQuestion() {
-  document.getElementById('feedback').textContent = '';
-  document.getElementById('nextQuestionBtn').style.display = 'none';
-  generateQuestion();
-}
-function getCurrentQuestionText() {
-  return questionDirection === "en2he" ? currentQuestion.english : currentQuestion.hebrew;
-}
-function getCurrentAnswerText() {
-  return questionDirection === "en2he" ? currentQuestion.hebrew : currentQuestion.english;
-}
-function generateQuestion() {
-  if (words.length < 2) return;
-  const randomIndex = Math.floor(Math.random() * words.length);
-  currentQuestion = words[randomIndex];
-  const qText = getCurrentQuestionText();
-  document.getElementById('question').textContent =
-    questionDirection === "en2he"
-    ? `מהו התרגום של "${qText}"?`
-    : `מהי המילה באנגלית עבור "${qText}"?`;
-  let correctAns = getCurrentAnswerText();
-  let allAnswers = words.map(w => (questionDirection === "en2he" ? w.hebrew : w.english));
-  let options = [correctAns];
-  let others = allAnswers.filter(ans => ans !== correctAns);
-  shuffleArray(others);
-  while (options.length < 4 && others.length) options.push(others.shift());
-  shuffleArray(options);
-  displayOptions(options);
-  setTimeout(() => speakWord(qText), 500);
-}
-function displayOptions(options) {
-  const container = document.getElementById('optionsContainer');
-  container.innerHTML = '';
-  options.forEach(option => {
-    const btn = document.createElement('button');
-    btn.textContent = option;
-    btn.className = 'btn-option';
-    btn.disabled = false;
-    btn.onclick = function() { checkAnswer(option); };
-    container.appendChild(btn);
-  });
-}
-function checkAnswer(selectedOption) {
-  const feedbackDiv = document.getElementById('feedback');
-  const correctAns = getCurrentAnswerText();
-  if (selectedOption === correctAns) {
-    feedbackDiv.textContent = 'תשובה נכונה!';
-    feedbackDiv.style.color = 'green';
-    correctCount++; updateStats();
-    setTimeout(nextQuestion, 1200);
-  } else {
-    feedbackDiv.textContent = 'תשובה שגויה! התשובה הנכונה: ' + correctAns;
-    feedbackDiv.style.color = 'red';
-    wrongCount++; updateStats();
-    document.getElementById('nextQuestionBtn').style.display = 'inline-block';
-  }
-  document.querySelectorAll('.btn-option').forEach(btn => btn.disabled = true);
-}
-function updateStats() {
-  const stats = document.getElementById('stats');
-  if (!stats) return;
-  stats.innerHTML = `נכונות: ${correctCount} | שגויות: ${wrongCount}`;
-}
-function shuffleArray(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-}
-function speakWord(text) {
-  if ('speechSynthesis' in window) {
-    let utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = isEnglish(text) ? 'en-US' : 'he-IL';
-    window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(utterance);
-  }
-}
-function showMessage(msg, isError = false, timeMs = 1700) {
-  let el = document.getElementById('flashMsg');
-  if (!el) {
-    el = document.createElement('div');
-    el.id = 'flashMsg';
-    document.body.appendChild(el);
-    Object.assign(el.style, {
-      position: 'fixed', top: '30px', right: '30px', zIndex: 10000,
-      background: '#fff', border: '2px solid #333', borderRadius: '10px',
-      padding: '12px 24px', fontSize: '1.1rem', minWidth: '180px',
-      boxShadow: '0 2px 12px rgba(0,0,0,0.13)', textAlign: 'center',
-      color: '#111'
-    });
-  }
-  el.style.background = isError ? '#ffd6d6' : '#e4ffd6';
-  el.style.borderColor = isError ? '#dc3545' : '#28a745';
-  el.textContent = msg;
-  el.style.display = 'block';
-  setTimeout(() => { el.style.display = 'none'; }, timeMs);
-}
+    function handleQuizAnswer(button, isCorrect, spokenSentence) {
+      const optionButtons = button.parentElement.querySelectorAll('button');
+      optionButtons.forEach(btn => btn.disabled = true);
+
+      if (isCorrect) {
+        button.classList.add('correct');
+        quizStats.correct += 1;
+        speakWord(spokenSentence);
+      } else {
+        button.classList.add('wrong');
+      }
+      quizStats.total += 1;
+      localStorage.setItem('quizStats', JSON.stringify(quizStats));
+      updateQuizStats();
+    }
+
+    function updateQuizStats() {
+      const accuracy = quizStats.total ? Math.round((quizStats.correct / quizStats.total) * 100) : 0;
+      quizAccuracy.textContent = accuracy + '%';
+    }
+
+    function populateSentenceBuilder() {
+      const type = sentenceType.value;
+      fillSelect(subjectSelect, subjects[type]);
+      fillSelect(detailSelect, details[type]);
+      sentenceOutput.textContent = 'המשפט יופיע כאן.';
+    }
+
+    function fillSelect(selectEl, items) {
+      selectEl.innerHTML = items.map((item, index) => `<option value="${index}">${item.en} (${item.he})</option>`).join('');
+    }
+
+    const linkingHebrewMap = {
+      and: 'וגם',
+      but: 'אבל',
+      because: 'כי',
+      so: 'לכן',
+      although: 'למרות ש־',
+      therefore: 'לפיכך'
+    };
+
+    const possessiveTemplates = [
+      {
+        en: (subject, detail) => `${subject.en} is proud of ${detail.en}.`,
+        he: (subject, detail) => `${subject.he} גאה ב${detail.he}.`
+      },
+      {
+        en: (subject, detail) => `${subject.en} carefully keeps ${detail.en}.`,
+        he: (subject, detail) => `${subject.he} שומר/ת בקפידה על ${detail.he}.`
+      },
+      {
+        en: (subject, detail) => `${subject.en} shares ${detail.en} with friends.`,
+        he: (subject, detail) => `${subject.he} משתף/ת ${detail.he} עם חברים.`
+      }
+    ];
+
+    function buildSentence() {
+      const type = sentenceType.value;
+      const subject = subjects[type][subjectSelect.value];
+      const detail = details[type][detailSelect.value];
+      if (!subject || !detail) return;
+
+      let sentence = '';
+      let translation = '';
+
+      if (type === 'possessive') {
+        const template = randomItem(possessiveTemplates);
+        sentence = template.en(subject, detail);
+        translation = `תרגום חופשי: ${template.he(subject, detail)}`;
+      } else {
+        const linkerWord = randomItem(wordsData.filter(item => item.category === 'linking')).word;
+        sentence = `${subject.en} ${linkerWord} ${detail.en}.`;
+        const linkerHe = linkingHebrewMap[linkerWord] || 'וגם';
+        translation = `תרגום חופשי: ${subject.he} ${linkerHe} ${detail.he}.`;
+      }
+      sentenceOutput.innerHTML = `<div>${sentence}</div><div style="font-size:0.95rem; opacity:0.8; margin-top:6px;">${translation}</div>`;
+      speakWord(sentence);
+    }
+
+    function createSentenceTemplate(item) {
+      if (item.category === 'possessive') {
+        return `___ brother lives in London.`;
+      }
+      const linkingTemplates = [
+        `I wanted to call you, ___ I was too busy.`,
+        `She studied hard ___ passed the exam.`,
+        `We left early ___ avoid the traffic.`
+      ];
+      return randomItem(linkingTemplates);
+    }
+
+    function generateDistractors(correctWord) {
+      const alternatives = wordsData.filter(item => item.word !== correctWord).map(item => item.word);
+      return shuffle(alternatives).slice(0, 3);
+    }
+
+    function populateFromStorage() {
+      learnedSet = new Set(JSON.parse(localStorage.getItem('learnedCards') || '[]'));
+      quizStats = JSON.parse(localStorage.getItem('quizStats') || '{"correct":0,"total":0}');
+    }
+
+    function randomItem(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function shuffle(array) {
+      return [...array].sort(() => Math.random() - 0.5);
+    }
+
+    function speakWord(text) {
+      if (!('speechSynthesis' in window)) return;
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = 'en-US';
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(utter);
+    }
+
+    populateFromStorage();
+    init();
   </script>
 </body>
 </html>
